@@ -1,24 +1,19 @@
-# base image
-FROM node:10-alpine
+FROM node:latest
 
-# set working directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /opt/ipfs
 
-# add '/usr/src/app/node_modules/.bin' to $PATH
-ENV PATH /usr/src/app/node_modules/.bin:$PATH
+RUN wget https://dist.ipfs.io/go-ipfs/v0.4.11/go-ipfs_v0.4.11_linux-amd64.tar.gz
+RUN tar xvfz go-ipfs_v0.4.11_linux-amd64.tar.gz
+RUN cp go-ipfs/ipfs /usr/local/bin
 
-# install and cache app dependencies
-COPY package.json /usr/src/app/package.json
-
-RUN npm install @material-ui/core --silent
-RUN npm install --silent
-RUN npm install react-scripts@1.1.1 -g --silent
-
-# bundle app source
+WORKDIR /hub
 COPY . .
 
 EXPOSE 3000
+EXPOSE 4001
+EXPOSE 5001
+EXPOSE 8080
 
-# start app
-CMD ["npm", "start"]
+RUN ["chmod", "+x", "./scripts/docker_start.sh"]
+
+CMD ./scripts/docker_start.sh
