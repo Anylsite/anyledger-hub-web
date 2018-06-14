@@ -102,6 +102,7 @@
                                         deviceRegistrationRaw.identity.address,
                                         deviceRegistrationRaw.identity.port,
                                         deviceRegistrationRaw.ver,
+                                        deviceRegistrationRaw.isAlive ? "Online" : "Offline",
                                         "N/A"
                                     ]).draw(false);
                                 });
@@ -265,6 +266,7 @@
                                     <th>IP address</th>
                                     <th>Port</th>
                                     <th>Firmware version</th>
+                                    <th>Status</th>
                                     <th class="disabled-sorting text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -275,6 +277,7 @@
                                     <th>IP address</th>
                                     <th>Port</th>
                                     <th>Firmware version</th>
+                                    <th>Status</th>
                                     <th class="text-right">Actions</th>
                                 </tr>
                             </tfoot>
