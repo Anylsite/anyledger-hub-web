@@ -35,7 +35,7 @@
             var web3Host = 'http://127.0.0.1';
             var web3Port = '8545';
     
-            // IPFS configuration 
+            // IPFS configuration
             var ipfsHost    = '127.0.0.1';
             var ipfsAPIPort = '5001';
 
@@ -60,11 +60,11 @@
             var abi = [ { "constant": false, "inputs": [ { "name": "deviceId", "type": "string" }, { "name": "ipfsHash", "type": "string" } ], "name": "updateDeviceRegistration", "outputs": [], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [], "name": "getDeviceRegistrationCount", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "deviceRegistrationIndex", "type": "uint256" } ], "name": "getDeviceRegistrationByIndex", "outputs": [ { "name": "", "type": "string" }, { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" } ];
             
             var deviceManager = web3.eth.contract(abi);
+            var deviceManagerInstance = deviceManager.at('0x3d18c830c5110e3d29c5dfff28719dee3cc3ed80');
+
+            var ipfs = window.IpfsApi(ipfsHost, ipfsAPIPort)
             
-            window.deviceManagerInstance = deviceManager.at('0x3d18c830c5110e3d29c5dfff28719dee3cc3ed80');
-            
-            window.ipfs = window.IpfsApi(ipfsHost, ipfsAPIPort)
-            window.ipfs.swarm.peers(function(err, response) {
+            ipfs.swarm.peers(function(err, response) {
                 if (err) {
                     console.error(err);
                 } else {
@@ -74,16 +74,13 @@
             });
 
             function listProvisionedDevices() {
-                window.deviceManagerInstance.getDeviceRegistrationCount({ from: account }, function (error, result) {
+                deviceManagerInstance.getDeviceRegistrationCount({ from: account }, function (error, result) {
                     var deviceRegistrationCount = result.c[0];
-                    
                     console.log("Current device registration count: " + deviceRegistrationCount);
 
-                    var table = $('#datatables').DataTable();
-
                     for (var i = 0; i < deviceRegistrationCount; i++) {
-                        window.deviceManagerInstance.getDeviceRegistrationByIndex(i, { from: account }, function (error, result) {
-
+                        deviceManagerInstance.getDeviceRegistrationByIndex(i, { from: account }, function (error, result) {
+                        
                             if (result != null) {
                                 var deviceId = result[0];
                                 var deviceIpfsHash = result[1];
@@ -91,9 +88,11 @@
                                 console.log("Device Id: " + deviceId);
                                 console.log("Device IPFS hash: " + deviceIpfsHash);
 
-                                window.ipfs.files.get(deviceIpfsHash, function (err, files) {
+                                ipfs.files.get(deviceIpfsHash, function (err, files) {
                                     var deviceRegistrationRaw = JSON.parse(files[0].content.toString('utf8'));
-                                    
+
+                                    var table = $('#datatables').DataTable();
+
                                     var registrationDate = new Date(0);
                                     registrationDate.setUTCSeconds(deviceRegistrationRaw.regDate);
 
