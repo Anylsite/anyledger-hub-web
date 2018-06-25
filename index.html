@@ -13,7 +13,7 @@
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 	<meta name="viewport" content="width=device-width" />
 
-	<!-- Bootstrap core CSS     -->
+	<!-- Bootstrap core CSS -->
 	<link href="http://127.0.0.1:8080/ipfs/QmTnLrPM93Z5vk6psEDJ9SCPkwZ5rxcCvyzjbpqz86VJdo/css/bootstrap.min.css" rel="stylesheet" />
 	
 	<!--  Material Dashboard CSS    -->
@@ -96,9 +96,13 @@
                                     var registrationDate = new Date(0);
                                     registrationDate.setUTCSeconds(deviceRegistrationRaw.regDate);
 
+                                    var latestUpdateDate = new Date(0);
+                                    latestUpdateDate.setUTCSeconds(deviceRegistrationRaw.lastUp);
+
                                     table.row.add([
                                         deviceRegistrationRaw.regId,
                                         registrationDate,
+                                        latestUpdateDate,
                                         deviceRegistrationRaw.identity.address,
                                         deviceRegistrationRaw.identity.port,
                                         deviceRegistrationRaw.ver,
@@ -263,6 +267,7 @@
                                 <tr>
                                     <th>Provisioning ID</th>
                                     <th>Provisioning date</th>
+                                    <th>Last update</th>
                                     <th>IP address</th>
                                     <th>Port</th>
                                     <th>Firmware version</th>
@@ -274,6 +279,7 @@
                                 <tr>
                                     <th>Provisioning ID</th>
                                     <th>Provisioning date</th>
+                                    <th>Last update</th>
                                     <th>IP address</th>
                                     <th>Port</th>
                                     <th>Firmware version</th>
